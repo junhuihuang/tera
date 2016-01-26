@@ -21,6 +21,10 @@ if [ ! -f "${FLAG_DIR}/dl_third" ] || [ ! -d "${DEPS_SOURCE}/.git" ]; then
     touch "${FLAG_DIR}/dl_third"
 fi
 
+if [ ! -f "$WORK_DIR/depends.mk" ]; then
+    cp $WORK_DIR/depends.mk.template $WORK_DIR/depends.mk
+fi
+
 cd ${DEPS_SOURCE}
 
 # boost
@@ -212,5 +216,6 @@ sed -i "s:^INS_PREFIX=.*:INS_PREFIX=$DEPS_PREFIX:" depends.mk
 # build tera
 ########################################
 
+make clean
 make -j4
 
