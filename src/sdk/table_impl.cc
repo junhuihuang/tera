@@ -55,7 +55,7 @@ DECLARE_string(tera_sdk_cookie_path);
 DECLARE_int32(tera_sdk_cookie_update_interval);
 DECLARE_bool(tera_sdk_perf_counter_enabled);
 DECLARE_int64(tera_sdk_perf_counter_log_interval);
-DECLARE_int32(FLAGS_tera_rpc_timeout_period);
+DECLARE_int32(tera_rpc_timeout_period);
 
 namespace tera {
 
@@ -287,13 +287,6 @@ bool TableImpl::Get(const std::string& row_key, const std::string& family,
 ResultStream* TableImpl::Scan(const ScanDescriptor& desc, ErrorCode* err) {
     ScanDescImpl * impl = desc.GetImpl();
     impl->SetTableSchema(_table_schema);
-    if (impl->GetFilterString() != "") {
-        MutexLock lock(&_table_meta_mutex);
-        if (!impl->ParseFilterString()) {
-            // fail to parse filter string
-            return NULL;
-        }
-    }
     ResultStream * results = NULL;
     if (desc.IsAsync() && (_table_schema.raw_key() != GeneralKv)) {
         VLOG(6) << "activate async-scan";
